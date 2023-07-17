@@ -1,33 +1,28 @@
 const express = require('express');
-const app = express();
-let { people } = require('./data');
+const router = express.Router();
 
-// static assets
-app.use(express.static('./methods-public')); 
-// inorder to get the form data from frontend, we use this express middleware
-app.use(express.urlencoded({ extended: false }))
-// parse json
-app.use(express.json());
+let { people } = require('../data');
+
 
 // GET
-app.get('/api/people', (req, res) => {
+// we will remove the '/api/people' and replace it with just '/'
+// becasue the base path is in place.
+router.get('/', (req, res) => {
     res.status(200).json({success:true, data: people})
 })
 
-// POST
-app.post('/login', (req, res) => {
-    console.log(req.body)
-    
-    const {name} = req.body;
+// With JS
+router.post('/', (req, res) => {
+    const { name } = req.body
 
-    if(name) {
-        return res.status(200).send(`Welcome ${name}`)
+    if(!name){
+        return res.status(400).json({success:false, msg:'please provide name value'})
     }
+    res.status(201).json({sucess: true, person: name})
+})
 
-    res.status(401).send('Please provide credentials')
-});
 
-app.post('/api/postman/people', (req, res) => {
+router.post('/postman', (req, res) => {
     const { name } = req.body
 
     if(!name){
@@ -38,18 +33,9 @@ app.post('/api/postman/people', (req, res) => {
 
 })
 
-// With JS
-app.post('/api/people', (req, res) => {
-    const { name } = req.body
-
-    if(!name){
-        return res.status(400).json({success:false, msg:'please provide name value'})
-    }
-    res.status(201).json({sucess: true, person: name})
-})
 
 // PUT
-app.put('/api/people/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     const { id } = req.params
     const { name } = req.body
     // console.log(id, name);
@@ -71,7 +57,7 @@ app.put('/api/people/:id', (req, res) => {
 })
 
 // Delete
-app.delete('/api/people/:id', (req, res) => {
+router.delete('/api/people/:id', (req, res) => {
     const person = people.find((person) => person.id === Number(req.params.id));
 
     if(!person){
@@ -83,6 +69,4 @@ app.delete('/api/people/:id', (req, res) => {
     return res.status(200).json({ success: true, data: newPeople})
 })
 
-app.listen(5000, () => {
-    console.log('Server is listening on port 5000')
-})
+module.exports = router

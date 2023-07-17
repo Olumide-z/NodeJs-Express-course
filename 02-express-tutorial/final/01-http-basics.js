@@ -1,26 +1,34 @@
-const http = require('http')
+const http = require('http');
 
-const server = http.createServer((req, res) => {
-  // console.log(req.method)
-  const url = req.url
-  // home page
-  if (url === '/') {
-    res.writeHead(200, { 'content-type': 'text/html' })
-    res.write('<h1>home page</h1>')
-    res.end()
-  }
-  // about page
-  else if (url === '/about') {
-    res.writeHead(200, { 'content-type': 'text/html' })
-    res.write('<h1>about page</h1>')
-    res.end()
-  }
-  // 404
-  else {
-    res.writeHead(404, { 'content-type': 'text/html' })
-    res.write('<h1>page not found</h1>')
-    res.end()
-  }
-})
+const server = http.createServer((req, res) =>{
+    console.log('user hit the server')
+    // console.log(req.method)
+    // console.log(req.url)
+    const url = req.url;
+
+    if(url === '/'){
+
+        //home page
+        res.writeHead(200, {'content-type' : 'text/html'});
+        res.write('<h1>Home page</h2>');
+        res.end();
+
+    }else if(url === '/about'){
+
+        // about page
+        res.writeHead(200, {'content-type' : 'text/html'});
+        res.write('<h1>About page</h2>');
+        res.end();
+
+    }else{
+
+        //404
+        res.writeHead(404, {'content-type' : 'text/html'});
+        res.write('<h1>page not found</h2>');
+        res.end();
+
+    }
+    
+});
 
 server.listen(5000)
